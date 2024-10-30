@@ -27,6 +27,7 @@ from minitorch.operators import (
 
 from .strategies import assert_close, small_floats
 
+
 # ## Task 0.1 Basic hypothesis tests.
 
 
@@ -112,7 +113,6 @@ def test_sigmoid(a: float) -> None:
     assert_close(1 - sigmoid(a), sigmoid(-a))
     assert sigmoid(0) == 0.5
     assert sigmoid(a + 1e-5) - sigmoid(a) >= 0
-
 
 
 @pytest.mark.task0_2
@@ -219,7 +219,7 @@ def test_one_args(fn: Tuple[str, Callable[[float], float]], t1: float) -> None:
 @given(small_floats, small_floats)
 @pytest.mark.parametrize("fn", two_arg)
 def test_two_args(
-    fn: Tuple[str, Callable[[float, float], float]], t1: float, t2: float
+        fn: Tuple[str, Callable[[float, float], float]], t1: float, t2: float
 ) -> None:
     name, base_fn = fn
     base_fn(t1, t2)
