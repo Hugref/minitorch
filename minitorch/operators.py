@@ -50,7 +50,7 @@ def eq(x: float, y: float) -> float:
 def max(x: float, y: float) -> float:
     "$f(x) =$ x if x is greater than y else y"
     # TODO: Implement for Task 0.1.
-    raise NotImplementedError('Need to implement for Task 0.1')
+    raise x * (x > y) + y * (y >= x)
 
 
 def is_close(x: float, y: float) -> float:
