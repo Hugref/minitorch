@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 from typing import Any, Iterable, List, Tuple
-
+from collections import defaultdict
 from typing_extensions import Protocol
+
 
 # ## Task 1.1
 # Central Difference calculation
@@ -23,7 +24,12 @@ def central_difference(f: Any, *vals: Any, arg: int = 0, epsilon: float = 1e-6) 
         An approximation of $f'_i(x_0, \ldots, x_{n-1})$
     """
     # TODO: Implement for Task 1.1.
-    raise NotImplementedError('Need to implement for Task 1.1')
+    arg_ls = list(vals)
+    arg_ls[arg] += epsilon
+    m = f(*arg_ls)
+    arg_ls[arg] -= 2 * epsilon
+    n = f(*arg_ls)
+    return (m - n) / (2 * epsilon)
 
 
 variable_count = 1
@@ -61,8 +67,21 @@ def topological_sort(variable: Variable) -> Iterable[Variable]:
     Returns:
         Non-constant Variables in topological order starting from the right.
     """
-    # TODO: Implement for Task 1.4.
-    raise NotImplementedError('Need to implement for Task 1.4')
+    visited = set()
+    result: List[Variable] = []
+
+    def dfs(v: Variable):
+        if v.unique_id in visited or v.is_constant():
+            return
+        if not v.is_leaf():
+            for parent in v.parents:
+                if not parent.is_constant():
+                    dfs(parent)
+        visited.add(v.unique_id)
+        result.append(v)
+
+    dfs(variable)
+    return reversed(result)  # Reverse to get topological order
 
 
 def backpropagate(variable: Variable, deriv: Any) -> None:
@@ -77,7 +96,18 @@ def backpropagate(variable: Variable, deriv: Any) -> None:
     No return. Should write to its results to the derivative values of each leaf through `accumulate_derivative`.
     """
     # TODO: Implement for Task 1.4.
-    raise NotImplementedError('Need to implement for Task 1.4')
+    topo_order = topological_sort(variable)
+
+    # Initialize a dictionary to hold derivatives for each variable
+    derivatives = defaultdict(lambda: 0)
+    derivatives[variable.unique_id] = deriv
+    for node in topo_order:
+        if node.is_leaf():
+            node.accumulate_derivative(derivatives[node.unique_id])
+        else:
+            d_output = derivatives[node.unique_id]
+            for parent, d_parent in node.chain_rule(d_output):
+                derivatives[parent.unique_id] += d_parent
 
 
 @dataclass
