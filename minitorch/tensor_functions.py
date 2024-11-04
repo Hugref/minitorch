@@ -15,7 +15,6 @@ from . import operators
 from .autodiff import Context
 from .tensor_ops import SimpleBackend, TensorBackend
 
-
 if TYPE_CHECKING:
     from typing import Any, List, Tuple
 
@@ -127,6 +126,7 @@ class Sigmoid(Function):
             t1.f.neg_map(t1.f.mul_zip(t1.f.mul_zip(t1.f.sigmoid_map(t1), t1.f.sigmoid_map(t1)), grad_output))
         )
 
+
 class ReLU(Function):
     @staticmethod
     def forward(ctx: Context, t1: Tensor) -> Tensor:
@@ -199,7 +199,7 @@ class LT(Function):
     @staticmethod
     def backward(ctx: Context, grad_output: Tensor) -> Tuple[Tensor, Tensor]:
         # TODO: Implement for Task 2.4.
-        return 0,0
+        return 0, 0
 
 
 class EQ(Function):
@@ -211,7 +211,7 @@ class EQ(Function):
     @staticmethod
     def backward(ctx: Context, grad_output: Tensor) -> Tuple[Tensor, Tensor]:
         # TODO: Implement for Task 2.4.
-        return 0,0
+        return 0, 0
 
 
 class IsClose(Function):
@@ -230,8 +230,6 @@ class Permute(Function):
         perm = a._tensor.permute(*order)
         return minitorch.Tensor.make(perm._storage, perm.shape, perm.strides, a.backend)
 
-
-
     @staticmethod
     def backward(ctx: Context, grad_output: Tensor) -> Tuple[Tensor, float]:
         # TODO: Implement for Task 2.4.
@@ -239,6 +237,7 @@ class Permute(Function):
         inverse_order = np.argsort(order)
         grad = grad_output._tensor.permute(*inverse_order)
         return minitorch.Tensor.make(grad._storage, grad.shape, grad.strides, grad_output.backend), 0.0
+
 
 class View(Function):
     @staticmethod
@@ -310,9 +309,9 @@ def zeros(shape: UserShape, backend: TensorBackend = SimpleBackend) -> Tensor:
 
 
 def rand(
-    shape: UserShape,
-    backend: TensorBackend = SimpleBackend,
-    requires_grad: bool = False,
+        shape: UserShape,
+        backend: TensorBackend = SimpleBackend,
+        requires_grad: bool = False,
 ) -> Tensor:
     """
     Produce a random tensor of size `shape`.
@@ -332,10 +331,10 @@ def rand(
 
 
 def _tensor(
-    ls: Any,
-    shape: UserShape,
-    backend: TensorBackend = SimpleBackend,
-    requires_grad: bool = False,
+        ls: Any,
+        shape: UserShape,
+        backend: TensorBackend = SimpleBackend,
+        requires_grad: bool = False,
 ) -> Tensor:
     """
     Produce a tensor with data ls and shape `shape`.
@@ -355,7 +354,7 @@ def _tensor(
 
 
 def tensor(
-    ls: Any, backend: TensorBackend = SimpleBackend, requires_grad: bool = False
+        ls: Any, backend: TensorBackend = SimpleBackend, requires_grad: bool = False
 ) -> Tensor:
     """
     Produce a tensor with data and shape from ls
@@ -390,7 +389,7 @@ def tensor(
 
 
 def grad_central_difference(
-    f: Any, *vals: Tensor, arg: int = 0, epsilon: float = 1e-6, ind: UserIndex
+        f: Any, *vals: Tensor, arg: int = 0, epsilon: float = 1e-6, ind: UserIndex
 ) -> float:
     x = vals[arg]
     up = zeros(x.shape)
